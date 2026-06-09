@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
+import heroImage from "../assets/hero.png";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +28,7 @@ export default function Hero() {
         style={{
           y: backgroundY,
           scale: backgroundScale,
-          backgroundImage: "url('src/assets/hero.png')",
+          backgroundImage: `url(${heroImage})`,
         }}
         className="
           absolute

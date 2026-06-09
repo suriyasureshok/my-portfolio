@@ -10,7 +10,6 @@ type CardNavLink = {
 
 export type CardNavItem = {
   label: string;
-  bgColor?: string; // No longer needed for background, but kept for type compatibility
   textColor?: string; 
   links: CardNavLink[];
 };

@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Cpu, Database, Network, Code2 } from "lucide-react";
 import Terminal from "./Terminal";
+import suriyaImage from "../assets/suriya.png";
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
@@ -24,7 +25,7 @@ export default function About() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } }
   };
 
   return (
@@ -37,7 +38,7 @@ export default function About() {
       <motion.div
         style={{
           y: backgroundY,
-          backgroundImage: "url('src/assets/suriya.png')",
+          backgroundImage: `url(${suriyaImage})`,
         }}
         className="absolute inset-0 bg-cover bg-center mix-blend-luminosity opacity-20 pointer-events-none"
       />

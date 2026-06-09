@@ -13,10 +13,6 @@ function App() {
     <div className="min-h-screen bg-[#050505]">
       <CardNav
         items={navItems}
-        baseColor="#ffffff"
-        menuColor="#000000"
-        buttonBgColor="#000000"
-        buttonTextColor="#fff"
       />
       <Hero />
       <About />

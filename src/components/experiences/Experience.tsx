@@ -1,4 +1,5 @@
-import { motion, } from "framer-motion";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useRef } from "react";
 import { experiences } from "./experienceData.ts";
 
@@ -6,7 +7,7 @@ export default function Experience() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Stagger variants for the cards entering the screen
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     show: {
       transition: {
@@ -94,13 +95,12 @@ export default function Experience() {
 }
 
 function TimelineCard({
-  experience,
-  index,
+  experience
 }: {
   experience: typeof experiences[0];
   index: number;
 }) {
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: 50, scale: 0.95 },
     show: { 
       opacity: 1, 

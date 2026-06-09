@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Users, BookOpen, ExternalLink } from "lucide-react";
+import communityImage from "../assets/community.png";
 
 // Inlined data for easy editing in your portfolio
 const communityData = {
@@ -49,7 +50,7 @@ export default function CommunityAndBlogs() {
         style={{
           y: backgroundY,
           scale: backgroundScale,
-          backgroundImage: "url('src/assets/community.png')",
+          backgroundImage: `url(${communityImage})`,
         }}
         className="
           absolute
