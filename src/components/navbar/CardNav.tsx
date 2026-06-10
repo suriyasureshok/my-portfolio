@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import type { MouseEvent } from "react";
 import { gsap } from 'gsap';
 import { GoArrowUpRight } from 'react-icons/go';
 
@@ -137,6 +138,19 @@ const CardNav: React.FC<CardNavProps> = ({
     }
   };
 
+  const handleSmoothScroll = (e: MouseEvent<HTMLAnchorElement>, targetId: string) => {
+      e.preventDefault();
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        // Optionally update window history hash cleanly without snapping
+        window.history.pushState(null, "", targetId);
+      }
+    };
+
   return (
     <div
       className={`card-nav-container fixed left-1/2 -translate-x-1/2 w-[90%] max-w-[800px] z-[99] top-[1.2em] md:top-[2em] ${className}`}
@@ -188,30 +202,30 @@ const CardNav: React.FC<CardNavProps> = ({
           aria-hidden={!isExpanded}
         >
           {(items || []).slice(0, 4).map((item, idx) => (
-            <div
-              key={`${item.label}-${idx}`}
-              ref={(el) => { cardsRef.current[idx] = el; }}
-              // INNER GLASS CARDS: Even lighter transparent background, own blur layer, and subtle hover transition
-              className="nav-card select-none relative flex flex-col gap-2 p-[12px_16px] rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-lg transition-colors duration-300 min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%] shadow-sm text-white"
-            >
-              <div className="nav-card-label font-medium tracking-[-0.5px] text-[18px] md:text-[22px] drop-shadow-sm">
-                {item.label}
-              </div>
-              <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
-                {item.links?.map((lnk, i) => (
-                  <a
-                    key={`${lnk.label}-${i}`}
-                    className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-70 text-[15px] md:text-[16px] text-white/90"
-                    href={lnk.href}
-                    aria-label={lnk.ariaLabel}
-                  >
-                    <GoArrowUpRight className="nav-card-link-icon shrink-0" aria-hidden="true" />
-                    {lnk.label}
-                  </a>
-                ))}
-              </div>
+          <div
+            key={`${item.label}-${idx}`}
+            ref={(el) => { cardsRef.current[idx] = el; }}
+            className="nav-card select-none relative flex flex-col gap-2 p-[12px_16px] rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-lg transition-colors duration-300 min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%] shadow-sm text-white"
+          >
+            <div className="nav-card-label font-medium tracking-[-0.5px] text-[18px] md:text-[22px] drop-shadow-sm">
+              {item.label}
             </div>
-          ))}
+            <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
+              {item.links?.map((lnk, i) => (
+                <a
+                  key={`${lnk.label}-${i}`}
+                  onClick={(e) => handleSmoothScroll(e, lnk.href)} // Use lnk.href instead of hardcoded "#about"
+                  className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-70 text-[15px] md:text-[16px] text-white/90"
+                  href={lnk.href}
+                  aria-label={lnk.ariaLabel}
+                >
+                  <GoArrowUpRight className="nav-card-link-icon shrink-0" aria-hidden="true" />
+                  {lnk.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
         </div>
       </nav>
     </div>

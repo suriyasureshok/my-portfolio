@@ -9,6 +9,11 @@ export const navItems = [
         href: "#about",
         ariaLabel: "About Me",
       },
+      {
+        label: "My Skills",
+        href: "#skills",
+        ariaLabel: "My Skills",
+      },
     ],
   },
   {

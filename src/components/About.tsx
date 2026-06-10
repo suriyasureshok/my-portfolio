@@ -1,11 +1,12 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { Cpu, Database, Network, Code2 } from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { Rocket, Network, Users, Camera, ChevronRight, ChevronLeft } from "lucide-react";
 import Terminal from "./Terminal";
 import suriyaImage from "../assets/suriya.png";
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
+  const [activeStory, setActiveStory] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -27,6 +28,38 @@ export default function About() {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } }
   };
+
+  // The Narrative Chapters
+  const storyChapters = [
+    {
+      id: "01",
+      title: "The Spark",
+      content: "My interest in technology began with Artificial Intelligence and Machine Learning, but building AI applications exposed me to a deeper question:\n\nWhat makes software reliable, scalable, and production-ready?"
+    },
+    {
+      id: "02",
+      title: "The Shift",
+      content: "That curiosity led me beyond models and algorithms into backend engineering, distributed systems, infrastructure, and systems programming.\n\nThrough startup internships, I've worked across both software engineering and AI development roles, gaining first-hand experience building products in fast-moving environments."
+    },
+    {
+      id: "03",
+      title: "The Community",
+      content: "Outside of work, I founded NammaRust, a community dedicated to exploring Rust across different domains.\n\nI also create technical content on YouTube, where I share insights on Rust, backend engineering, and software engineering fundamentals."
+    },
+    {
+      id: "04",
+      title: "The Philosophy",
+      content: "I'm naturally curious about how systems behave under load, why they fail, and how they can be designed to scale reliably.\n\nI enjoy digging into root causes rather than settling for temporary fixes and believe that strong engineering is built on a deep understanding of fundamentals."
+    }
+  ];
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveStory((prev) => (prev + 1) % storyChapters.length);
+    }, 8000); 
+    return () => clearInterval(timer);
+  }, [storyChapters.length]);
 
   return (
     <section
@@ -59,10 +92,6 @@ export default function About() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8">
-        {/* UPDATED GRID: 
-          Now uses `md:grid-cols-2` to ensure it sits side-by-side on smaller laptops/tablets,
-          and `lg:grid-cols-[1fr,1.1fr]` for larger screens. 
-        */}
         <div className="grid gap-10 md:gap-12 lg:gap-20 md:grid-cols-2 lg:grid-cols-[1fr,1.1fr] items-center">
           
           {/* LEFT CONTENT */}
@@ -71,23 +100,74 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full"
+            className="w-full flex flex-col"
           >
-
+            <div className="flex items-center gap-4 mb-6">
+            <div className="h-[1px] w-12 bg-[#4D7C8A]" />
+            <span className="font-mono text-sm tracking-widest text-[#8FAEC1] uppercase">Chapter 1: The Summary</span>
+          </div>
             <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1] text-[#F1F5F9]">
-              Building Systems <br />
+              The Journey <br />
               <span className="bg-gradient-to-r from-[#8FAEC1] to-[#cbd5e1] bg-clip-text text-transparent">
-                That Scale.
+                So Far.
               </span>
             </h2>
 
-            <p className="mt-6 max-w-xl text-base lg:text-lg leading-relaxed text-[#94A3B8] font-light">
-              My journey revolves around backend architecture, distributed systems, 
-              AI engineering, and building reliable infrastructure that powers modern applications.
-              <br /><br />
-              I enjoy turning complex engineering problems into elegant solutions, 
-              with a strong focus on performance, observability, and scalability.
-            </p>
+            {/* FIXED HEIGHT Interactive Story Carousel */}
+            <div className="mt-8 relative h-[450px] sm:h-[220px] lg:h-[320px] flex flex-col justify-between rounded-2xl border border-[#263655]/40 bg-[#111A2E]/20 p-6 backdrop-blur-sm">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStory}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="flex flex-col gap-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-mono font-semibold text-[#8FAEC1] tracking-wider">
+                      {storyChapters[activeStory].id}
+                    </span>
+                    <h3 className="text-xl font-semibold text-[#F1F5F9]">
+                      {storyChapters[activeStory].title}
+                    </h3>
+                  </div>
+                  <p className="text-base leading-relaxed text-[#94A3B8] font-light whitespace-pre-wrap">
+                    {storyChapters[activeStory].content}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Carousel Controls */}
+              <div className="mt-6 flex items-center justify-between border-t border-[#263655]/40 pt-4">
+                <div className="flex gap-2">
+                  {storyChapters.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveStory(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        activeStory === i ? "w-8 bg-[#8FAEC1]" : "w-3 bg-[#263655] hover:bg-[#38507D]"
+                      }`}
+                      aria-label={`Go to story slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setActiveStory((prev) => (prev === 0 ? storyChapters.length - 1 : prev - 1))}
+                    className="p-1.5 rounded-md text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#263655]/50 transition-colors"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button 
+                    onClick={() => setActiveStory((prev) => (prev + 1) % storyChapters.length)}
+                    className="p-1.5 rounded-md text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#263655]/50 transition-colors"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* Dynamic Staggered Highlights */}
             <motion.div
@@ -95,19 +175,19 @@ export default function About() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: false, amount: 0.2 }}
-              className="mt-5 lg:mt-5 grid grid-cols-1 xl:grid-cols-2 gap-4"
+              className="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-4"
             >
               <motion.div variants={itemVariants}>
-                <Highlight icon={<Cpu size={22} />} title="AI Systems" desc="LLMs & RAG Pipelines" />
+                <Highlight icon={<Rocket size={22} />} title="Startup Experience" desc="Software & AI Internships" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <Highlight icon={<Database size={22} />} title="Data Platforms" desc="High-throughput processing" />
+                <Highlight icon={<Network size={22} />} title="Distributed Systems" desc="Scaling Beyond One Machine" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <Highlight icon={<Network size={22} />} title="Distributed Apps" desc="Microservices & Cloud" />
+                <Highlight icon={<Users size={22} />} title="NammaRust" desc="Rust Community & Learning" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <Highlight icon={<Code2 size={22} />} title="Open Source" desc="Community contributions" />
+                <Highlight icon={<Camera size={22} />} title="Technical Content" desc="YouTube & Knowledge Sharing" />
               </motion.div>
             </motion.div>
           </motion.div>
@@ -160,7 +240,6 @@ function Highlight({ icon, title, desc }: HighlightProps) {
         hover:shadow-[0_8px_30px_rgba(38,54,85,0.3)]
       "
     >
-      {/* Shine Effect on Hover */}
       <div className="absolute -inset-full top-0 z-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-all duration-700 group-hover:left-[150%] group-hover:opacity-100" />
       
       <div className="relative z-10 flex items-center gap-4">

@@ -5,8 +5,9 @@ import Experience from "./components/experiences/Experience";
 import { navItems } from "./components/navbar/navbarData";
 import Projects from "./components/project/Projects";
 import Skills from "./components/skills/Skills";
-import CommunityAndBlogs from "./components/CommunityAndBlogs";
+import Community from "./components/Community";
 import ContactAndFooter from "./components/ContactAndFooter";
+import InvestigationBoard from "./components/brand/InvestigationBoard";
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
       />
       <Hero />
       <About />
+      <Projects />
       <Skills />
       <Experience />
-      <Projects />
-      <CommunityAndBlogs />
+      <Community />
+      <InvestigationBoard />
       <ContactAndFooter />
     </div>
   );

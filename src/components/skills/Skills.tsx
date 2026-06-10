@@ -1,80 +1,68 @@
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import { skills } from "./skillsData";
+import { motion, useMotionTemplate, useMotionValue, useTransform, useScroll } from "framer-motion";
+import { useRef, type MouseEvent } from "react";
+import { skills } from "./skillsData"; 
+import suriya4Image from "../../assets/suriya_4.jpeg";
 
 export default function Skills() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let particles: { x: number; y: number; vx: number; vy: number }[] = [];
-
-    const init = () => {
-      particles = Array.from({ length: 40 }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * 800,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-      }));
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'rgba(77, 124, 138, 0.15)';
-      
-      particles.forEach((p, _) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > 800) p.vy *= -1;
-
-        particles.forEach((p2, _) => {
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        });
-      });
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    canvas.width = window.innerWidth;
-    canvas.height = 800;
-    init();
-    animate();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+    const { scrollYProgress } = useScroll({
+      target: containerRef,
+      offset: ["start end", "end start"],
+    });
+  
+    const backgroundY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   return (
-    <section className="relative py-24 md:py-32 bg-[#0B1121] overflow-hidden">
-      {/* 1. INTERACTIVE NEURAL-MESH BACKGROUND */}
-      <canvas ref={canvasRef} className="absolute inset-0 z-0" />
-      
-      {/* Decorative Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B1121] via-transparent to-[#0B1121] pointer-events-none" />
+    <section
+      id="skills"
+      ref={containerRef}
+      className="relative overflow-hidden bg-[#0E1629] pt-14 pb-24 md:pt-20 md:pb-32"
+    >
+      <motion.div
+        style={{
+          y: backgroundY,
+          backgroundImage: `url(${suriya4Image})`,
+        }}
+        className="absolute inset-0 bg-cover bg-center mix-blend-luminosity opacity-5 pointer-events-none"
+      />
+      {/* Floating Ambient Orbs for depth */}
+      {/* <motion.div
+        animate={{ y: [0, -30, 0], opacity: [0.05, 0.15, 0.05] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 left-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#4D7C8A] blur-[150px] pointer-events-none"
+      />
+      <motion.div
+        animate={{ y: [0, 40, 0], opacity: [0.05, 0.1, 0.05] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute bottom-0 right-0 h-[600px] w-[600px] translate-x-1/3 rounded-full bg-[#263655] blur-[150px] pointer-events-none"
+      /> */}
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8">
+        
+        {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-[#F1F5F9]">Technical Arsenal.</h2>
-          <p className="mt-4 text-[#94A3B8]">The stack I use to architect robust systems.</p>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-[1px] w-12 bg-[#8FAEC1]" />
+            <span className="font-mono text-sm tracking-widest text-[#8FAEC1] uppercase">Chapter 3: The arsenal</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-[#F1F5F9]">
+            Technical Abilities.
+          </h2>
+          <p className="mt-6 mb-0 text-lg text-[#94A3B8] font-light max-w-2xl leading-relaxed">
+            The programming languages, frameworks, and infrastructure tools I use to architect robust, scalable systems.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* REFACTORED: 2-COLUMN SMOOTH GRID LAYOUT */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 lg:gap-x-16 border-t border-[#263655]/40">
           {skills.map((skillGroup, index) => (
-            <SkillCard key={index} group={skillGroup} index={index} />
+            <SkillRow key={index} group={skillGroup} index={index} />
           ))}
         </div>
       </div>
@@ -82,23 +70,103 @@ export default function Skills() {
   );
 }
 
-function SkillCard({ group, index }: { group: typeof skills[0]; index: number }) {
+// --- REFACTORED COLUMN CELL COMPONENT ---
+
+function SkillRow({ group, index }: { group: typeof skills[0]; index: number }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      className="relative group p-[1px] rounded-2xl bg-white/5 hover:bg-[#4D7C8A]/20 transition-all duration-500"
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
+      onMouseMove={handleMouseMove}
+      className="
+        group 
+        relative 
+        flex 
+        flex-col 
+        gap-4
+        py-8
+        md:py-10
+        border-b 
+        border-[#263655]/40 
+        transition-colors
+        duration-500
+        hover:border-[#4D7C8A]/50
+      "
     >
-      <div className="h-full rounded-[15px] bg-[#0B1121]/90 p-6 backdrop-blur-sm border border-[#263655]/50">
-        <h3 className="mb-6 text-sm font-bold uppercase tracking-widest text-[#4D7C8A]">{group.category}</h3>
-        <div className="flex flex-wrap gap-2">
-          {group.items.map((item) => (
-            <span key={item} className="px-2 py-1 rounded bg-[#111A2E] text-[#F1F5F9] text-xs font-mono border border-transparent hover:border-[#8FAEC1]/30 transition-colors">
-              {item}
-            </span>
-          ))}
-        </div>
+      {/* Dynamic Hover Spotlight Background */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 group-hover:opacity-100 z-0 rounded-xl"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              400px circle at ${mouseX}px ${mouseY}px,
+              rgba(77, 124, 138, 0.04),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {/* Category Header (Top of the item) */}
+      <div className="relative z-10 w-full pt-1">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-[#4D7C8A] flex items-center gap-4 transition-colors duration-300 group-hover:text-[#F1F5F9]">
+          <span className="relative flex h-2 w-2 items-center justify-center">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#8FAEC1] opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4D7C8A] group-hover:bg-[#8FAEC1] transition-colors duration-300" />
+          </span>
+          {group.category}
+        </h3>
+      </div>
+
+      {/* Content Pills (Wrapping naturally underneath the category) */}
+      <div className="relative z-10 w-full flex flex-wrap gap-2.5 pt-2">
+        {group.items.map((item, i) => (
+          <motion.span
+            key={item}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.25, delay: (index * 0.05) + (i * 0.02) }}
+            whileHover={{ 
+              y: -3, 
+              scale: 1.03,
+              transition: { type: "spring", stiffness: 400, damping: 12 } 
+            }}
+            className="
+              px-3.5 
+              py-1.5 
+              rounded-xl 
+              bg-[#111A2E]/60 
+              backdrop-blur-md
+              text-[#94A3B8] 
+              text-xs 
+              font-mono 
+              border 
+              border-[#263655]/60 
+              shadow-sm
+              cursor-default
+              transition-colors
+              duration-300
+              hover:bg-[#1D3557]
+              hover:text-[#ffffff]
+              hover:border-[#4D7C8A]
+              hover:shadow-[0_6px_15px_rgba(77,124,138,0.25)]
+            "
+          >
+            {item}
+          </motion.span>
+        ))}
       </div>
     </motion.div>
   );

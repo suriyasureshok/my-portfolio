@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import type { MouseEvent } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
 import heroImage from "../assets/hero.png";
 
@@ -17,6 +18,20 @@ export default function Hero() {
   const backgroundScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0px", "-40px"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+
+  // Premium Programmatic Smooth Scrolling Handler
+  const handleSmoothScroll = (e: MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      // Optionally update window history hash cleanly without snapping
+      window.history.pushState(null, "", targetId);
+    }
+  };
 
   return (
     <section 
@@ -71,33 +86,10 @@ export default function Hero() {
       >
         <div className="max-w-3xl">
 
-          {/* Premium Status Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="
-              mb-8
-              inline-flex
-              items-center
-              gap-3
-              rounded-full
-              border
-              border-[#223354]
-              bg-[#111A2E]/60
-              px-4
-              py-2
-              backdrop-blur-md
-            "
-          >
-            <div className="relative flex h-2 w-2 items-center justify-center">
-              <div className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#8FAEC1] opacity-40"></div>
-              <div className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#8FAEC1]"></div>
-            </div>
-            <span className="text-xs sm:text-sm font-medium tracking-wide text-[#94A3B8]">
-              Available for Opportunities
-            </span>
-          </motion.div>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-[1px] w-12 bg-[#4D7C8A]" />
+            <span className="font-mono text-sm tracking-widest text-[#8FAEC1] uppercase">Chapter 0: The Intro</span>
+          </div>
 
           {/* High-Impact Professional Heading */}
           <motion.h1
@@ -118,9 +110,9 @@ export default function Hero() {
               leading-[1.1]
             "
           >
-            Architecting <br className="hidden md:block" />
+            Building Systems <br className="hidden md:block" />
             <span className="bg-gradient-to-r from-[#8FAEC1] to-[#cbd5e1] bg-clip-text text-transparent">
-              Scalable Infrastructure.
+              Beyond One Machine.
             </span>
           </motion.h1>
 
@@ -143,12 +135,11 @@ export default function Hero() {
               font-light
             "
           >
-            I engineer high-performance backend systems and robust web infrastructure, 
-            focusing on memory-safe, concurrent, and distributed architectures to power 
-            enterprise-grade applications.
+            Backend Engineer focused on distributed systems, web infrastructure, and AI-powered applications. 
+            Founder of <b>NammaRust</b>, where we explore Rust, software engineering, and scalable system design.
           </motion.p>
 
-          {/* Elevated Call-to-Actions (UPDATED) */}
+          {/* Elevated Call-to-Actions (UPDATED TO ANCHOR TAGS) */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -159,8 +150,10 @@ export default function Hero() {
             }}
             className="mt-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-8"
           >
-            {/* Primary Button: Clean, High-Contrast Minimalist */}
-            <button
+            {/* Primary Link: Clean, High-Contrast Minimalist */}
+            <a
+              href="#about"
+              onClick={(e) => handleSmoothScroll(e, "#about")}
               className="
                 group
                 relative
@@ -188,15 +181,17 @@ export default function Hero() {
                 focus:ring-offset-[#0B1121]
               "
             >
-              Explore Architecture
+              Explore My Journey
               <ArrowUpRight 
                 size={18} 
                 className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" 
               />
-            </button>
+            </a>
 
-            {/* Secondary Action: Minimal Animated Text Link */}
-            <button
+            {/* Secondary Link: Minimal Animated Text Link */}
+            <a
+              href="#contact"
+              onClick={(e) => handleSmoothScroll(e, "#contact")}
               className="
                 group
                 flex
@@ -220,7 +215,7 @@ export default function Hero() {
                 size={16} 
                 className="opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1"
               />
-            </button>
+            </a>
           </motion.div>
 
           {/* Bottom Divider / Metric spacer */}

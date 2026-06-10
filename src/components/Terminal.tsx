@@ -78,14 +78,15 @@ export default function Terminal() {
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
 
-        {/* Content Area with Pre-Wrap for Line Breaks */}
+        {/* Content Area with Pre-Wrap for Line Breaks - NOW FIXED HEIGHT */}
         <div
           className="
             relative
-            min-h-[450px]
+            h-[640px]
             p-6
             font-mono
-            text-[15px]
+            text-[14px]
+            sm:text-[15px]
             leading-relaxed
             text-[#8FAEC1]
             whitespace-pre-wrap
@@ -94,25 +95,23 @@ export default function Terminal() {
           <TypeAnimation
             sequence={[
               "suriya@system:~$ whoami",
-              800,
-              "suriya@system:~$ whoami\n\n> Backend Engineer",
-              1200,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt",
-              800,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems",
               600,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering",
-              600,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering\n• Rust Development",
-              600,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering\n• Rust Development\n• Open Source",
-              1200,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering\n• Rust Development\n• Open Source\n\nsuriya@system:~$ cargo run --release future",
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator",
               1000,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering\n• Rust Development\n• Open Source\n\nsuriya@system:~$ cargo run --release future\n\n[Compiling] scalable_systems v1.0.0...",
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt",
+              600,
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt\n\nAI -> Backend\nBackend -> Systems\nSystems -> Infrastructure",
               1000,
-              "suriya@system:~$ whoami\n\n> Backend Engineer\n\nsuriya@system:~$ cat interests.txt\n\n• Distributed Systems\n• AI Engineering\n• Rust Development\n• Open Source\n\nsuriya@system:~$ cargo run --release future\n\n[Compiling] scalable_systems v1.0.0...\n[Finished] release [optimized] target(s) in 1.24s\n\nLaunching innovation...",
-              3000,
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt\n\nAI -> Backend\nBackend -> Systems\nSystems -> Infrastructure\n\nsuriya@system:~$ cat initiatives.txt",
+              600,
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt\n\nAI -> Backend\nBackend -> Systems\nSystems -> Infrastructure\n\nsuriya@system:~$ cat initiatives.txt\n\n• Founder, NammaRust\n• Technical YouTube Creator\n• Open Source Explorer",
+              1000,
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt\n\nAI -> Backend\nBackend -> Systems\nSystems -> Infrastructure\n\nsuriya@system:~$ cat initiatives.txt\n\n• Founder, NammaRust\n• Technical YouTube Creator\n• Open Source Explorer\n\nsuriya@system:~$ cat mindset.txt",
+              600,
+              "suriya@system:~$ whoami\n\n> Software Engineer\n> Community Builder\n> Content Creator\n\nsuriya@system:~$ cat journey.txt\n\nAI -> Backend\nBackend -> Systems\nSystems -> Infrastructure\n\nsuriya@system:~$ cat initiatives.txt\n\n• Founder, NammaRust\n• Technical YouTube Creator\n• Open Source Explorer\n\nsuriya@system:~$ cat mindset.txt\n\nUnderstand Root Causes\nBuild For Scale\nKeep Learning",
+              4000,
+              "", // Resets the terminal for a loop
+              500
             ]}
             wrapper="div"
             cursor={true}

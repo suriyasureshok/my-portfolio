@@ -1,185 +1,198 @@
-import { motion } from "framer-motion";
-import type { Variants } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { experiences } from "./experienceData.ts";
+import { Terminal, Rocket, Cpu, CheckCircle2 } from "lucide-react";
+import suriya2Image from "../../assets/suriya_2.jpg";
+
+const experiences = [
+  {
+    id: "nvskzen",
+    company: "NVSKZEN",
+    role: "Product Engineer",
+    date: "Present",
+    icon: <Terminal size={20} />,
+    color: "#C1E8FF", 
+    points: [
+      "Pioneered R&D for a visual AI model builder allowing drag-and-drop neural network generation.",
+      "Engineered modular node pipelines optimizing complex configurations for CNN and RNN architectures.",
+      "Architected a high-performance desktop runtime environment to streamline prototyping and training.",
+    ],
+  },
+  {
+    id: "daloft",
+    company: "DALOFT AEROSPACE",
+    role: "Software Engineer Intern",
+    date: "Jan 2026 – Mar 2026",
+    icon: <Rocket size={20} />,
+    color: "#7DA0CA", 
+    points: [
+      "Integrated mission systems using 4 low-level protocols (UART, I2C, SPI, CAN) to resolve link latency.",
+      "Designed 3 mission-critical systems spanning ground station software, metrics tracking, and logging.",
+      "Deployed production infrastructure within a rapid 10-day cycle to meet strict field testing deadlines.",
+    ],
+  },
+  {
+    id: "omis",
+    company: "OMIS LABS UK LTD",
+    role: "AI Developer",
+    date: "Sep 2025 – Oct 2025",
+    icon: <Cpu size={20} />,
+    color: "#5483B3", 
+    points: [
+      "Optimized real-time voice AI execution pipelines to achieve sub-200ms round-trip request latency.",
+      "Architected scalable session memory systems maintaining conversational states across concurrent paths.",
+      "Constructed unified CI/CD systems, health metrics, and data streams to monitor enterprise agents.",
+    ],
+  },
+];
 
 export default function Experience() {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Stagger variants for the cards entering the screen
-  const containerVariants: Variants = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
-    
-    <section className="relative overflow-hidden bg-[#0B1121] py-24 md:py-5">
-      {/* Inject custom scrollbar styles securely */}
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          height: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #0B1121;
-          border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #263655;
-          border-radius: 8px;
-          border: 2px solid #0B1121;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #4D7C8A;
-        }
-      `}</style>
+    <section 
+      id="experience" /* Added anchor ID for custom navigation links */
+      ref={containerRef}
+      className="relative w-full min-h-screen bg-[#0B1121] py-10 sm:py-24 overflow-hidden flex flex-col"
+    >
+      {/* Parallax Background */}
+      <motion.div
+        style={{
+          y: backgroundY,
+          backgroundImage: `url(${suriya2Image})`,
+        }}
+        className="absolute inset-0 bg-cover bg-center mix-blend-luminosity opacity-10 pointer-events-none"
+      />
 
-      {/* Ambient Background Glow */}
-      <div className="absolute left-1/2 top-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#021024]/20 blur-[150px] pointer-events-none" />
+      {/* Decorative Technical Grid Overlay */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#22335410_1px,transparent_1px),linear-gradient(to_bottom,#22335410_1px,transparent_1px)] bg-[size:4rem_4rem]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 md:mb-24"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#F1F5F9]">
-            Experience
-          </h2>
-          <p className="mt-4 text-[#94A3B8]">
-            A journey through my professional milestones and growth.
-          </p>
-        </motion.div>
-
-        {/* Horizontal Scroll Container */}
-        <div className="relative">
-          {/* Continuous Horizontal Background Line */}
-          <div className="absolute left-0 top-[28px] h-[2px] w-full bg-[#263655]/50" />
-
-          <motion.div
-            ref={scrollRef}
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: false, amount: 0.1 }}
-            className="
-              custom-scrollbar
-              relative
-              flex
-              w-full
-              snap-x
-              snap-mandatory
-              gap-8
-              overflow-x-auto
-              pb-12
-              pt-4
-            "
-          >
-            {experiences.map((exp, index) => (
-              <TimelineCard key={index} experience={exp} index={index} />
-            ))}
-            
-            {/* Spacer to allow the last card to scroll fully to the left on desktop */}
-            <div className="min-w-[10vw] flex-shrink-0 sm:min-w-[30vw]" />
-          </motion.div>
+      {/* --- LEFT ALIGNED CONTENT HEADER --- */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8 mb-16 md:mb-24">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="h-[1px] w-12 bg-[#5483B3]" />
+          <span className="font-mono text-sm tracking-widest text-[#7DA0CA] uppercase font-semibold">
+            Chapter 4: The Experience
+          </span>
         </div>
+        <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-[#F1F5F9]">
+          Professional History.
+        </h2>
+        <p className="mt-4 text-base md:text-lg text-[#94A3B8] font-light max-w-xl">
+          A track record of engineering scalable backend modules, automation pipelines, and core systems architecture.
+        </p>
+      </div>
+
+      {/* --- VERTICAL TIMELINE TRACK CONTAINER --- */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8 flex flex-col items-center">
+        
+        {/* Adaptive Spine Line */}
+        <div className="absolute top-0 bottom-0 left-4 md:left-1/2 -translate-x-1/2 w-[1px] bg-[#223354]/60 z-0" />
+
+        {experiences.map((exp, i) => {
+          const isLeft = i % 2 === 0;
+
+          return (
+            <div 
+              key={exp.id} 
+              className={`relative w-full flex flex-col justify-start pb-12 md:pb-16 md:min-h-[280px] ${
+                isLeft ? "md:flex-row" : "md:flex-row-reverse"
+              }`}
+            >
+              {/* 1. INTERACTIVE SYSTEM CARD CONTAINER */}
+              <div className={`w-full md:w-1/2 flex pl-10 pr-4 md:px-12 z-10 ${
+                isLeft ? "md:justify-end" : "md:justify-start"
+              }`}>
+                <motion.div
+                  initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                  className="group relative bg-[#111A2E]/80 backdrop-blur-xl border border-[#223354]/50 rounded-2xl p-6 sm:p-8 w-full max-w-[620px] flex flex-col justify-between transition-all duration-500 hover:border-[#5483B3]/50 hover:bg-[#152038]/90 hover:shadow-[0_15px_35px_rgba(0,0,0,0.4)]"
+                >
+                  {/* Subtle Accent Glow */}
+                  <div 
+                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at top right, ${exp.color}, transparent 50%)` }}
+                  />
+
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between gap-4 border-b border-[#223354]/50 pb-4">
+                    <div className="overflow-hidden">
+                      <h3 className="text-lg sm:text-xl font-bold text-[#F1F5F9] truncate group-hover:text-white transition-colors">
+                        {exp.role}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-xs text-[#7DA0CA] mt-1">
+                        <span>{exp.company}</span>
+                        <span className="md:hidden text-[#223354]">•</span>
+                        <span className="md:hidden font-semibold" style={{ color: exp.color }}>{exp.date}</span>
+                      </div>
+                    </div>
+                    <div 
+                      className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0B1121] border border-[#223354]/60 group-hover:scale-105 transition-transform duration-500 shrink-0 shadow-inner"
+                      style={{ color: exp.color }}
+                    >
+                      {exp.icon}
+                    </div>
+                  </div>
+
+                  {/* Normalized Bullet List Layout */}
+                  <ul className="space-y-3 relative z-10 flex-grow pt-4">
+                    {exp.points.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <div className="mt-1 shrink-0">
+                          <CheckCircle2 size={14} className="text-[#5483B3] opacity-60 group-hover:opacity-100 transition-all duration-300" />
+                        </div>
+                        <p className="text-[#94A3B8] leading-relaxed text-xs sm:text-sm font-light group-hover:text-[#cbd5e1] transition-colors">
+                          {point}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </div>
+
+              {/* 2. CENTRAL RUNTIME HUB */}
+              <div className="absolute left-4 md:left-1/2 top-0 bottom-0 -translate-x-1/2 w-0 h-full flex items-start md:items-center justify-center z-20">
+                {/* Central Spine Node Circle */}
+                <div 
+                  className="absolute top-8 md:top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#0B1121] border-2 z-10 shadow-[0_0_10px_rgba(0,0,0,0.8)]" 
+                  style={{ borderColor: exp.color }}
+                >
+                  <div className="w-1.5 h-1.5 rounded-full m-auto mt-[2px]" style={{ backgroundColor: exp.color }} />
+                </div>
+              </div>
+
+              {/* 3. ALIGNED DESKTOP DATE COLUMN */}
+              <div className={`hidden md:flex w-1/2 items-center px-12 z-10 ${
+                isLeft ? "justify-start" : "justify-end"
+              }`}>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: false, amount: 0.5 }}
+                  className="px-4 py-1.5 rounded-full border border-[#223354]/60 bg-[#111A2E]/90 backdrop-blur-md shadow-xl"
+                >
+                  <span 
+                    className="font-mono font-bold tracking-widest text-[11px] uppercase whitespace-nowrap"
+                    style={{ color: exp.color }}
+                  >
+                    {exp.date}
+                  </span>
+                </motion.div>
+              </div>
+
+            </div>
+          );
+        })}
+
       </div>
     </section>
-  );
-}
-
-function TimelineCard({
-  experience
-}: {
-  experience: typeof experiences[0];
-  index: number;
-}) {
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, x: 50, scale: 0.95 },
-    show: { 
-      opacity: 1, 
-      x: 0, 
-      scale: 1,
-      transition: { type: "spring", stiffness: 70, damping: 15 }
-    },
-  };
-
-  return (
-    <motion.div
-      variants={itemVariants}
-      className="
-        group
-        relative
-        flex
-        w-[85vw]
-        min-w-[320px]
-        max-w-[400px]
-        flex-shrink-0
-        snap-start
-        flex-col
-        sm:w-[400px]
-      "
-    >
-      {/* Node & Animated Line Connection */}
-      <div className="relative mb-8 flex items-center">
-        {/* The Node */}
-        <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 border-[#0B1121] bg-[#4D7C8A] shadow-[0_0_15px_#4D7C8A] transition-transform duration-300 group-hover:scale-125">
-          <div className="h-1.5 w-1.5 rounded-full bg-[#0B1121]" />
-        </div>
-        
-        {/* Active Line (Glows on Hover) */}
-        <div className="absolute left-6 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-[#4D7C8A] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      </div>
-
-      {/* Glassmorphism Card */}
-      <div
-        className="
-          relative
-          h-full
-          overflow-hidden
-          rounded-3xl
-          border
-          border-[#263655]/60
-          bg-[#111A2E]/40
-          p-8
-          backdrop-blur-md
-          transition-all
-          duration-500
-          hover:-translate-y-2
-          hover:border-[#4D7C8A]/50
-          hover:bg-[#152038]/60
-          hover:shadow-[0_10px_40px_rgba(38,54,85,0.4)]
-        "
-      >
-        {/* Subtle Shine Effect */}
-        <div className="absolute -inset-full top-0 z-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-all duration-700 group-hover:left-[150%] group-hover:opacity-100" />
-
-        <div className="relative z-10">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="text-sm font-bold tracking-widest text-[#4D7C8A]">
-              {experience.year}
-            </span>
-          </div>
-
-          <h3 className="mb-1 text-2xl font-bold text-[#F1F5F9] transition-colors duration-300 group-hover:text-white">
-            {experience.role}
-          </h3>
-
-          <p className="mb-6 font-mono text-sm text-[#8FAEC1]">
-            @ {experience.company}
-          </p>
-
-          <p className="leading-relaxed text-[#94A3B8]">
-            {experience.description}
-          </p>
-        </div>
-      </div>
-    </motion.div>
   );
 }
